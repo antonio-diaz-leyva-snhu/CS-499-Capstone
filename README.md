@@ -1,3 +1,3 @@
 # CS-499 Capstone
 
-To Be Completed
+Visit my page [here!](https://antonio-diaz-leyva-snhu.github.io/CS-499-Capstone/)
