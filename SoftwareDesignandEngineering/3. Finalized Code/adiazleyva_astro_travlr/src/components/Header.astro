@@ -1,0 +1,23 @@
+---
+// Replaces partials/header.hbs. The current page is highlighted from the URL
+// instead of being hardcoded to "Travel".
+import { navLinks, isCurrent } from '../lib/nav';
+const path = Astro.url.pathname;
+---
+
+<div id="header">
+  <div id="logo">
+    <a href="/"><img src="/images/logo.png" alt="Travlr Getaways logo" height="100" width="200" /></a>
+  </div>
+  <div id="navigation">
+    <ul>
+      {
+        navLinks.map((link) => (
+          <li class={isCurrent(link.href, path) ? 'selected' : undefined}>
+            <a href={link.href}>{link.label}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</div>

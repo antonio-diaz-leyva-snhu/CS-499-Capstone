@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"
+    />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <header>
+      <div style="text-align: center">
+        <h1>Antonio Diaz-Leyva</h1>
+        <h2>CS-499 Computer Science Capstone</h2>
+      </div>
+    </header>
+
+    <article>
+      <section>
+        <h2>Code Review</h2>
+        <div style="display: flex; justify-content: center">
+          <iframe
+            width="560"
+            height="315"
+            src="https://www.youtube.com/embed/0oZK5m-nzR8?si=DmJIA2b2RMMA_UXK"
+            title="YouTube video player"
+            frameborder="0"
+            allow="
+              accelerometer;
+              autoplay;
+              clipboard-write;
+              encrypted-media;
+              gyroscope;
+              picture-in-picture;
+              web-share;
+            "
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+          ></iframe>
+        </div>
+        <br />
+        <a href="https://youtu.be/0oZK5m-nzR8">Link to Code Review</a>
+      </section>
+    </article>
+
+    <article>
+      <section>
+        <h2>Artifact Enhancements</h2>
+        <p>
+          For this capstone we had to make enhancements to projects to showcase
+          growth in the following categories:
+        </p>
+        <details name="SDE">
+          <summary role="button" class="outline">
+            Software Design and Engineering
+          </summary>
+          <p>
+            The artifact is Travlr Getaways, a full stack travel-booking web
+            application I built in CS 465 during summer 2026. The original had
+            three parts that shared one MongoDB database: app_server, app_api,
+            and app_admin. <br /><br />
+            For my capstone enhancement, I rebuilt the application on AstroJS as
+            a single project. The Astro version includes:
+          </p>
+          <ul>
+            <li>
+              the page layout and reusable header, footer and trip card
+              components
+            </li>
+            <li>a cached database connection, with trip and user schemas</li>
+            <li>the public home and trip listing pages</li>
+            <li>a REST API for trips, sign-in, sign-out and registration</li>
+            <li>an authentication layer with a middleware guard</li>
+            <li>
+              admin pages for signing in and for listing, adding, editing and
+              deleting trips
+            </li>
+          </ul>
+          <p>
+            I chose this artifact because it shows how I approach engineering
+            work larger than a single feature: understand the system first, then
+            decide how to change it. I also knew the original well enough to
+            judge it honestly, because I had built it myself. The enhancement
+            reduced three codebases and two toolchains to one, removed
+            duplicated logic, and closed real security gaps. The skills it shows
+            are software architecture and system analysis, working across
+            frameworks (Express to Astro, Handlebars to components, Angular to
+            server-rendered pages), applying a security mindset to existing
+            code, and documenting decisions so someone else can follow them.
+            <br /><br />
+            Reflecting on the process the biggest lesson was that a migration is
+            mostly a reading exercise. Mapping the starter code file by file
+            showed me things I had missed while building it and areas for
+            improvement. I learned to separate what was worth keeping from what
+            was there only because it worked first. The hardest part was
+            deciding what to rebuild and what to preserve. The stylesheet had to
+            stay in public/ because its relative image paths would break if
+            moved. Redesigning authentication without breaking existing accounts
+            took care. Verification was also a challenge.
+          </p>
+        </details>
+        <details name="DSA">
+          <summary role="button" class="outline">
+            Data Structures and Algorithms
+          </summary>
+          <p>
+            This artifact is a deep Q-learning agent that learns to solve an 8x8
+            maze and reach a treasure. I first built it as a Jupyter notebook
+            for CS-370. The agent uses an epsilon-greedy policy, experience
+            replay and a periodically refreshed target network. It trains until
+            it wins nearly every game and can finish from every open starting
+            cell. For this capstone I refactored it into a Python package of six
+            classes with a console interface. The classes are TrainingConfig,
+            DQNAgent, Trainer, Evaluator, MazeRenderer and TreasureHuntCLI. It
+            now has three commands: train, evaluate and play. I chose this
+            artifact because it shows algorithmic work and software engineering
+            in the same project. The learning algorithm is the same, but the
+            engineering around it is very different. Overall, a notebook that
+            only I could run became a program that someone else can run, test
+            and change.
+            <br /><br />
+            The biggest lesson was that making code reusable is mostly about
+            finding hidden assumptions. Globals, hard-coded settings and
+            unprinted results all looked fine in a notebook because I was the
+            only user. Separating the agent from the trainer and evaluator let
+            me test most of the logic with a simple stand-in agent. The main
+            challenge was a limit in my working environment. TensorFlow could
+            not be installed there, so the model, training step and save/load
+            code has not been run. A smaller challenge was keeping the
+            documentation in step with the code.
+          </p>
+        </details>
+        <details name="DB">
+          <summary role="button" class="outline">Databases</summary>
+          <p>
+            The artifact is the SNHU Investments client manager, a C++ console
+            program I first wrote for CS-410 Reverse Engineering. The original
+            kept five clients in global variables. It used one hardcoded
+            password and offered three menu options: display the clients, change
+            a client’s service, and exit. The enhancements were so that clients
+            and user accounts are stored in a SQLite database. The program now
+            supports full create, read, update and delete, a filtered client
+            report, and a database-backed login.
+            <br /><br />
+            I chose this artifact because it shows a complete change of
+            architecture while the program keeps its original behavior. The
+            enhancement replaces ten parallel variables and an if/else chain
+            with a four-table schema. It also adds first-run account creation,
+            so no default password lives in the source. The enhancement fixed
+            the starter’s four weaknesses: data lost on exit, a single shared
+            password, a fixed list of five clients, and no way to add or delete
+            a client. Showcasing skills such as:
+          </p>
+          <ul>
+            <li>Working with a database from code</li>
+            <li>Data Integrity</li>
+            <li>Design Choices</li>
+            <li>Defensive input handling</li>
+          </ul>
+          <p>
+            The biggest lesson was that moving to a database is mostly a design
+            exercise. Deciding how clients are identified, when seeding runs,
+            and what happens to related rows mattered more than the SQL itself.
+            I also learned to treat every place user text meets the database as
+            a security boundary, and to build each piece in small steps.
+            <br /><br />
+            My first schema carried over unnecessary UNIQUE constraints, so
+            seeding failed because required columns were missing. I fixed the
+            schema and the seed together, then removed the extra constraints so
+            that two clients can share a name. I also had to decide what to
+            leave out. I planned to add SHA-256 password hashing with a salt,
+            but was moved it out of scope so the enhancement stayed focused on
+            the database.
+            <br /><br />
+          </p>
+        </details>
+      </section>
+    </article>
+    <article>
+      <section>
+        <h2>Professional Assessment</h2>
+        <p>
+          When I started the Computer Science program at SNHU, I already had
+          about six years in SaaS and cloud technical support. I knew how
+          software fails in production and how to talk to the people affected.
+          What I wanted was the engineering foundation to build those systems
+          rather than only support them. The coursework at SNHU has given me
+          that foundation. They also gave me a way to show how my support
+          background, my SQL depth and my newer development skills fit together.
+          The program overall let me further develop soft and technical skills
+          that I have picked up through work or introduced me to:
+        </p>
+        <details name="CiaTE">
+          <summary role="button" class="outline">
+            Collaborating in a Team Environment
+          </summary>
+          <p>
+            At my current day job teamwork is an important soft skill to have.
+            Currently I am on an ERP system migration project. The work is
+            organized around mapping spreadsheets that define how each ERP
+            source field lands in the other's system. A senior Systems Architect
+            and I work through them together, over the migration I have
+            delivered extracts for varous business componenets. In the program,
+            working from rubrics and milestone feedback taught me to treat
+            reviews as input to the design, not a grade to defend.
+          </p>
+        </details>
+        <details name="CwS">
+          <summary role="button" class="outline">
+            Communicating with Stakeholders
+          </summary>
+          <p>
+            Migration work forces me to explain technical decisions to people
+            who know the business but not the SQL. In coursework, the CS 405
+            secure development policy for the fictional company Green Pace was
+            an exercise in the same skill. I wrote the policy, then turned it
+            into a narrated presentation so a non-technical audience could
+            follow the reasoning behind each coding standard. My support career
+            taught me to match the level of detail to the listener, and the
+            program gave me the vocabulary to do it for engineering decisions as
+            well as incidents.
+          </p>
+        </details>
+        <details name="DSA">
+          <summary role="button" class="outline">
+            Data Structures and Algorithms
+          </summary>
+          <p>
+            Coursework in algorithms and machine learning pushed me beyond
+            textbook implementations. My reinforcement learning work, including
+            REINFORCE and A2C on CartPole and the Treasure Hunt deep Q-learning
+            project, showed me how the choice of data structure and algorithm
+            shapes whether a solution converges, runs fast and stays
+            understandable. Outside the program, SQL set-based thinking and
+            window functions have made me consider algorithmic complexity at
+            data scale. Choosing a join strategy or a windowed query over a
+            row-by-row approach is the same kind of tradeoff.
+          </p>
+        </details>
+        <details name="SEaDB">
+          <summary role="button" class="outline">
+            Software Engineerign and Databases
+          </summary>
+          <p>
+            My database strength is the most established part of my profile. I
+            write Oracle SQL daily, and the program let me apply that thinking
+            in new contexts, such as designing a SQLite-backed C++ client
+            management application with CRUD operations and data reporting. In
+            web development, I rebuilt my understanding of full-stack
+            architecture through the Travlr project (Express and Handlebars, an
+            Angular admin, and MongoDB), then analyzed how to migrate it to
+            AstroJS.I am also building my personal portfolio site in Astro,
+            which keeps me practicing component design, props and content
+            collections.
+          </p>
+        </details>
+        <details name="Sec">
+          <summary role="button" class="outline">Security</summary>
+          <p>
+            Security became a thread through my coursework. In CS 405 I wrote
+            ten C++ coding standards and a policy covering automation,
+            encryption and the Triple-A framework (authentication,
+            authorization, accounting). In CS 410 I analyzed disassembled x86-64
+            binaries and found vulnerabilities such as division by zero and
+            unvalidated input, which showed me how a small missing check becomes
+            an exploitable flaw.
+          </p>
+        </details>
+        <details name="Art">
+          <summary role="button" class="outline">
+            How My Artifacts Fit Together
+          </summary>
+          <ul>
+            <li>
+              <strong>Software Design and Engineering: </strong> the Travlr
+              full-stack application, migrated to AstroJS, with a system
+              analysis document describing the current architecture and the
+              transition process. It shows I can evaluate an existing system,
+              reason about tradeoffs and plan a migration.
+            </li>
+            <li>
+              <strong>Data Structures and Algorithms: </strong> the Treasure
+              Hunt deep Q-learning notebook, refactored into object-oriented
+              classes with a console interface so it can be rerun without
+              editing code. It shows I can take working but fragile research
+              code and make it structured and reusable.
+            </li>
+            <li>
+              <strong>Databases: </strong> the C++ client management application
+              enhanced with SQLite, including CRUD operations, reporting and
+              account creation on first run. It shows I can design and implement
+              persistent storage, not just query it.
+            </li>
+          </ul>
+          <p>
+            Together they trace a path from analyzing and planning (software
+            design), to structuring and optimizing (algorithms), to storing and
+            securing data (databases). The same habits run through all three:
+            refactor for clarity, document decisions, and be honest about
+            limitations. These are the habits I rely on in my EBS-to-IFS work.
+            My goal is to become a software engineer. This program, the
+            ePortfolio and my migration work show that I can combine strong
+            database skills, a security-minded approach, and the communication
+            experience from my support career. I’m ready to contribute to an
+            engineering team and keep growing in it.
+          </p>
+        </details>
+      </section>
+    </article>
+    <footer class="container">
+      <div>
+        <small>
+          Styled With:
+          <a href="picocss.com">Pico CSS</a>
+          <br />
+        </small>
+        <small
+          >Contact:
+          <a href="https://github.com/antonio-diaz-leyva-snhu/CS-499-Capstone"
+            >Capstone Repo</a
+          >
+          -
+          <a href="https://www.linkedin.com/in/antonio-diaz-leyva/">LinkedIn</a>
+          <br />
+          <img
+            src="snhu_wordmark_rgb_rev.png"
+            width="300px"
+            style="display: block; margin: 0 auto"
+          />
+        </small>
+      </div>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,41 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import TripForm from '../../../components/TripForm.astro';
+import { getTripByCode, updateTrip } from '../../../lib/trips';
+import { validateTrip } from '../../../lib/validate.ts';
+
+export const prerender = false;
+
+const code = Astro.params.code ?? '';
+const trip = await getTripByCode(code);
+if (!trip) return new Response('Trip not found', { status: 404 });
+
+let values: Record<string, string> = { ...trip };
+let errors: Record<string, string> = {};
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  values = {};
+  form.forEach((v, k) => {
+    values[k] = typeof v === 'string' ? v : '';
+  });
+  values.code = code; // the code is the identity and cannot be edited
+  const result = validateTrip(values);
+  if (!result.ok) {
+    errors = result.errors;
+  } else {
+    try {
+      const { code: _code, ...fields } = result.value;
+      await updateTrip(code, fields);
+      return Astro.redirect(`/admin?saved=${encodeURIComponent(code)}`, 303);
+    } catch (err) {
+      console.error(err);
+      errors = { description: 'The trip could not be saved.' };
+    }
+  }
+}
+---
+
+<AdminLayout title={`Edit ${trip.name} | Travlr Getaways`}>
+  <h1>Edit {trip.name}</h1>
+  <TripForm values={values} errors={errors} codeLocked submitLabel="Save changes" />
+</AdminLayout>

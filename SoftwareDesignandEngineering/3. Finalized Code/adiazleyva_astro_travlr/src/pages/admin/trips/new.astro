@@ -1,0 +1,36 @@
+---
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import TripForm from '../../../components/TripForm.astro';
+import { createTrip, DuplicateTripError } from '../../../lib/trips';
+import { validateTrip } from '../../../lib/validate.ts';
+
+export const prerender = false;
+
+let values: Record<string, string> = {};
+let errors: Record<string, string> = {};
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  form.forEach((v, k) => {
+    values[k] = typeof v === 'string' ? v : '';
+  });
+  const result = validateTrip(values);
+  if (!result.ok) {
+    errors = result.errors;
+  } else {
+    try {
+      await createTrip(result.value);
+      return Astro.redirect(`/admin?saved=${encodeURIComponent(result.value.code)}`, 303);
+    } catch (err) {
+      errors = err instanceof DuplicateTripError
+        ? { code: err.message }
+        : { description: 'The trip could not be saved.' };
+      if (!(err instanceof DuplicateTripError)) console.error(err);
+    }
+  }
+}
+---
+
+<AdminLayout title="Add trip | Travlr Getaways">
+  <h1>Add a trip</h1>
+  <TripForm values={values} errors={errors} submitLabel="Add trip" />
+</AdminLayout>

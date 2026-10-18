@@ -1,0 +1,18 @@
+---
+// One trip in the public listing (was the {{#each trips}} body in travel.hbs).
+// `description` is admin-authored HTML. It is rendered as HTML but passed through an
+// allow-list first, so stored script or attributes can never reach the page.
+import type { Trip } from '../lib/trips';
+import { sanitizeDescription } from '../lib/sanitize.ts';
+
+interface Props {
+  trip: Trip;
+}
+const { trip } = Astro.props;
+---
+
+<li>
+  <a href={`/api/trips/${encodeURIComponent(trip.code)}`}><img src={`/images/${trip.image}`} alt={trip.name} /></a>
+  <h2><a href="/travel">{trip.name}</a></h2>
+  <Fragment set:html={sanitizeDescription(trip.description)} />
+</li>

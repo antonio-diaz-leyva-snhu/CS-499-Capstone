@@ -1,0 +1,53 @@
+---
+// One form for add and edit (was the Angular add-trip and edit-trip components).
+import type { TripInput } from '../lib/validate.ts';
+
+interface Props {
+  values?: Partial<TripInput>;
+  errors?: Record<string, string>;
+  codeLocked?: boolean;
+  submitLabel?: string;
+}
+const { values = {}, errors = {}, codeLocked = false, submitLabel = 'Save' } = Astro.props;
+const dateValue = values.start ? String(values.start).slice(0, 10) : '';
+
+const fields: { name: string; label: string; hint?: string; type?: 'text' | 'date' }[] = [
+  { name: 'code', label: 'Code', hint: 'Letters, numbers, dashes. Cannot change later.' },
+  { name: 'name', label: 'Name' },
+  { name: 'length', label: 'Length', hint: 'For example: 4 nights / 5 days' },
+  { name: 'start', label: 'Start date', type: 'date' },
+  { name: 'resort', label: 'Resort' },
+  { name: 'perPerson', label: 'Price per person', hint: 'For example: 799.00' },
+  { name: 'image', label: 'Image file', hint: 'A file in /images, such as reef1.jpg' },
+];
+---
+
+<form method="post" class="admin-form">
+  {
+    fields.map((f) => (
+      <div>
+        <label for={f.name}>{f.label}</label>
+        <input
+          id={f.name}
+          name={f.name}
+          type={f.type ?? 'text'}
+          value={f.name === 'start' ? dateValue : (values as Record<string, string>)[f.name] ?? ''}
+          readonly={f.name === 'code' && codeLocked}
+          required
+        />
+        {f.hint && <p class="hint">{f.hint}</p>}
+        {errors[f.name] && <p class="error">{errors[f.name]}</p>}
+      </div>
+    ))
+  }
+  <div>
+    <label for="description">Description</label>
+    <textarea id="description" name="description" required>{values.description ?? ''}</textarea>
+    <p class="hint">Basic formatting only: p, strong, em, ul, ol, li, br, h3, h4.</p>
+    {errors.description && <p class="error">{errors.description}</p>}
+  </div>
+  <div class="admin-actions">
+    <button type="submit">{submitLabel}</button>
+    <a href="/admin">Cancel</a>
+  </div>
+</form>

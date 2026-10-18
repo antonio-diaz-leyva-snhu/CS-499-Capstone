@@ -1,0 +1,65 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { getTrips, deleteTrip, type Trip } from '../../lib/trips';
+
+export const prerender = false;
+
+if (Astro.request.method === 'POST') {
+  const form = await Astro.request.formData();
+  const code = form.get('code');
+  if (form.get('intent') === 'delete' && typeof code === 'string') {
+    try {
+      await deleteTrip(code);
+      return Astro.redirect(`/admin?deleted=${encodeURIComponent(code)}`, 303);
+    } catch (err) {
+      console.error(err);
+      return Astro.redirect('/admin?error=delete', 303);
+    }
+  }
+}
+
+let trips: Trip[] = [];
+let failed = false;
+try {
+  trips = await getTrips();
+} catch (err) {
+  console.error(err);
+  failed = true;
+}
+const deleted = Astro.url.searchParams.get('deleted');
+const saved = Astro.url.searchParams.get('saved');
+const deleteFailed = Astro.url.searchParams.get('error') === 'delete';
+---
+
+<AdminLayout title="Manage trips | Travlr Getaways">
+  <h1>Manage trips</h1>
+  {deleted && <p class="admin-notice">Deleted trip {deleted}.</p>}
+  {saved && <p class="admin-notice">Saved trip {saved}.</p>}
+  {(failed || deleteFailed) && <p class="admin-alert">The request could not be completed.</p>}
+  <p><a href="/admin/trips/new">Add a trip</a></p>
+  <table class="admin-table">
+    <thead>
+      <tr><th>Code</th><th>Name</th><th>Start</th><th>Price</th><th></th></tr>
+    </thead>
+    <tbody>
+      {
+        trips.map((t) => (
+          <tr>
+            <td>{t.code}</td>
+            <td>{t.name}</td>
+            <td>{t.start.slice(0, 10)}</td>
+            <td>${t.perPerson}</td>
+            <td>
+              <a href={`/admin/trips/${encodeURIComponent(t.code)}`}>Edit</a>
+              <form method="post">
+                <input type="hidden" name="intent" value="delete" />
+                <input type="hidden" name="code" value={t.code} />
+                <button type="submit" onclick={`return confirm('Delete ${t.code.replace(/[^A-Za-z0-9_-]/g, '')}?')`}>Delete</button>
+              </form>
+            </td>
+          </tr>
+        ))
+      }
+    </tbody>
+  </table>
+</AdminLayout>

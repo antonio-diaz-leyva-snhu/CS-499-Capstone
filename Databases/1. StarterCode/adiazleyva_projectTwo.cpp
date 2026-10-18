@@ -1,6 +1,5 @@
 // =====================================================================
 // SNHU Investments - Client Management Application
-// Project Two: Security Vulnerability Review and Fix Implementations
 // Author: Antonio Diaz-Leyva
 // =====================================================================
 
@@ -20,30 +19,9 @@
 
 using namespace std;
 
-// ---------------------------------------------------------------------
-// SECURITY VULNERABILITY #1: Hardcoded / weak plaintext password.
 
-// SECURITY FIX #1: The raw plaintext password is no longer stored as a
-// global variable. Instead, only a hash of the password is kept
-// (storedPasswordHash, set up in main()), and the char[16] buffer was
-// removed entirely. NOTE: std::hash is NOT a cryptographically secure
-// hash function, this is just used as an example for the concept of 
-// hashing.
-
-// ---- Global variables ----
-// SECURITY VULNERABILITY #2: Excessive use of global variables.
-
-// SECURITY FIX #2 (partial): Variables that only matter within a
-// single operation (changechoice, newservice, per-attempt password
-// entry) have been moved to local/function scope below so they can no
-// longer be read or altered from unrelated code. 
 string username;
 
-// SECURITY VULNERABILITY #3: Fixed-size C-style char buffers.
-//
-// SECURITY FIX #3: The fixed-size char arrays were replaced with
-// std::string, which manages its own memory and cannot be overflowed
-// by normal string operations.
 string name1 = "Bob Jones";
 string name2 = "Sarah Davis";
 string name3 = "Amy Friendly";
@@ -77,13 +55,6 @@ int main() {
     // See SECURITY VULNERABILITY #1 / SECURITY FIX #1 above.
     storedPasswordHash = HashPassword("123");
 
-    // -----------------------------------------------------------------
-    // SECURITY VULNERABILITY #4: Unlimited login attempts.
-    //
-    // SECURITY FIX #4: A maximum attempt counter (MAX_LOGIN_ATTEMPTS)
-    // was added. After 3 failed attempts the program exits instead of
-    // continuing to prompt, which mitigates brute-force guessing from
-    // this interface.
     int answer;
     int attempts = 0;
     bool authenticated = false;
@@ -110,13 +81,6 @@ int main() {
         cout << "CHANGE a client's choice (enter 2)\n";
         cout << "Exit the program.. (enter 3)\n";
 
-        // -------------------------------------------------------------
-        // SECURITY VULNERABILITY #5: No input validation on menu choice.
-        //
-        // SECURITY FIX #5: GetValidatedMenuChoice() checks cin's fail
-        // state, clears it, and discards bad input before re-prompting,
-        // so malformed input can no longer desync the input stream.
-        // -------------------------------------------------------------
         choice = GetValidatedMenuChoice();
         cout << "You chose " << choice << endl;
 
@@ -150,15 +114,6 @@ size_t HashPassword(const string &plainText) {
     return hash<string>{}(plainText);
 }
 
-// -----------------------------------------------------------------------
-// SECURITY VULNERABILITY #6 (in GetMaskedPassword / original CheckUser
-// PermissionAccess): The password was read with "cin >> enteredPassword;"
-// which echoes every typed character to the screen in plain view
-//
-// SECURITY FIX #6: GetMaskedPassword() disables terminal echo while the
-// password is entered and prints '*' for each character instead, so the
-// real characters are never shown on screen.
-// -----------------------------------------------------------------------
 string GetMaskedPassword() {
     string pwd = "";
 #ifdef _WIN32
@@ -200,18 +155,7 @@ int CheckUserPermissionAccess() {
     cout << "Enter your password: \n";
     string enteredPassword = GetMaskedPassword(); // SECURITY FIX #6
 
-    // -------------------------------------------------------------
-    // SECURITY VULNERABILITY #7: Password compared against a
-    // hardcoded plaintext literal ("123"), and the username entered
-    // above was never checked against anything 
-    //
-    // SECURITY FIX #7: The comparison now hashes the entered
-    // password and compares hash values, so the real password is
-    // never held in a plaintext comparison in this function. Full
-    // per-user authentication / role-based access control would
-    // require a real user-account store (e.g., a database of
-    // users, hashed passwords, and roles) whichs seems beyond
-	// scope of the project
+    
     size_t enteredHash = HashPassword(enteredPassword);
 
     if (enteredHash == storedPasswordHash) {
@@ -233,14 +177,6 @@ void DisplayInfo() {
 }
 
 void ChangeCustomerChoice() {
-    // SECURITY VULNERABILITY #8: No validation on user-supplied indices
-    // or values. 
-    //
-    // SECURITY FIX #8: Both changechoice and newservice are now
-    // validated (with re-prompting / an error message) before being
-    // applied, and these variables were moved out of global scope into
-    // this function's local scope so they cannot be read or modified
-    // by unrelated code elsewhere in the program.
 	
     int changechoice;
     int newservice;

@@ -1,0 +1,35 @@
+---
+// Replaces app_server/controllers/travel.js + views/travel.hbs.
+// Reads trips straight from the data layer instead of fetching its own API over HTTP.
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TripCard from '../components/TripCard.astro';
+import { getTrips, type Trip } from '../lib/trips';
+
+export const prerender = false; // trips are live data, so render on each request
+
+let trips: Trip[] = [];
+let message: string | null = null;
+try {
+  trips = await getTrips();
+  if (trips.length === 0) message = 'No trips exist in our database';
+} catch (err) {
+  console.error('Trip lookup failed:', err);
+  message = 'Trip lookup error';
+}
+---
+
+<BaseLayout title="Travel | Travlr Getaways">
+  <div id="contents">
+    <div class="box">
+      <div>
+        <div class="body">
+          <h1>Travel</h1>
+          {message && <p>{message}</p>}
+          <ul id="sites">
+            {trips.map((trip) => <TripCard trip={trip} />)}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

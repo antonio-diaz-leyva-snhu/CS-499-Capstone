@@ -1,0 +1,31 @@
+---
+// Replaces app_server/views/layouts/layout.hbs. The #background > #page structure
+// comes from the page template; the footer sits outside #page, as in the original.
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title?: string;
+}
+const { title = 'Travlr Getaways' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>{title}</title>
+    <link rel="stylesheet" href="/css/style.css" />
+    <slot name="head" />
+  </head>
+  <body>
+    <div id="background">
+      <div id="page">
+        <Header />
+        <slot />
+      </div>
+      <Footer />
+    </div>
+  </body>
+</html>
